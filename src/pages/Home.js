@@ -2,8 +2,7 @@ import { Fragment } from 'react'
 import { Popover, Transition } from '@headlessui/react'
 import { MenuIcon, XIcon } from '@heroicons/react/outline'
 import Footer from '../components/Footer'
-
-const navigation = [{ name: 'Login', href: '/' }]
+import { Link } from 'react-router-dom'
 
 export default function Home() {
   return (
@@ -59,12 +58,11 @@ export default function Home() {
                     </div>
                   </div>
                   <div className="hidden md:flex">
-                    <a
-                      href="/login"
-                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700"
-                    >
-                      Log in
-                    </a>
+                    <Link to="/login">
+                      <div className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700">
+                        Log in
+                      </div>
+                    </Link>
                   </div>
                 </nav>
 
@@ -98,17 +96,6 @@ export default function Home() {
                             <XIcon className="h-6 w-6" aria-hidden="true" />
                           </Popover.Button>
                         </div>
-                      </div>
-                      <div className="px-2 pt-2 pb-3 space-y-1">
-                        {navigation.map((item) => (
-                          <a
-                            key={item.name}
-                            href={item.href}
-                            className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-                          >
-                            {item.name}
-                          </a>
-                        ))}
                       </div>
                       <a
                         href="/login"
