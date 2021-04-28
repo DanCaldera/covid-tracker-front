@@ -125,7 +125,7 @@ export default function Home() {
                 <div className="bg-white sm:max-w-md sm:w-full sm:mx-auto sm:rounded-lg sm:overflow-hidden">
                   <div className="px-4 py-8 sm:px-10">
                     <div>
-                      <p className="text-sm font-medium text-gray-700">Sign in with Email</p>
+                      <p className="text-sm font-medium text-gray-700">Sign up with Email</p>
                     </div>
 
                     <div className="mt-6">
