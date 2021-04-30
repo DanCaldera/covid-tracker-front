@@ -1,16 +1,21 @@
-import { Fragment, useEffect } from 'react'
 import { Popover, Transition } from '@headlessui/react'
 import { MenuIcon, XIcon } from '@heroicons/react/outline'
-import { Link } from 'react-router-dom'
-import { home } from '../axios/router'
+import { Fragment, useEffect, useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
+import { Link } from 'react-router-dom'
+import { home, register } from '../axios/router'
 
 export default function Home() {
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const [processing, setProcessing] = useState(false)
+
   //* to verify if backend is online
   useEffect(() => {
     const getHome = async () => {
       const response = await home()
-      console.log(response)
       if (response.data === 'pageok') {
         toast.success('Welcome!')
       } else {
@@ -19,6 +24,29 @@ export default function Home() {
     }
     getHome()
   }, [])
+
+  const _handleSubmit = async (e) => {
+    e.preventDefault()
+    setProcessing(true)
+    const _data = {
+      name,
+      email,
+      password,
+    }
+
+    const response = await register(_data)
+
+    if (response.data) {
+      if (response.data.advice) {
+        toast.error(response.data.advice)
+      }
+      if (response.data.status === 'success') {
+        toast.success(response.data.message)
+      }
+    }
+
+    setProcessing(false)
+  }
 
   return (
     <div className="relative bg-gray-800 overflow-hidden">
@@ -146,7 +174,7 @@ export default function Home() {
                     </div>
 
                     <div className="mt-6">
-                      <form action="/" method="POST" className="space-y-6">
+                      <form className="space-y-6" onSubmit={_handleSubmit}>
                         <div>
                           <label htmlFor="mobile-or-email" className="sr-only">
                             Name
@@ -158,6 +186,7 @@ export default function Home() {
                             placeholder="Name"
                             required
                             className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                            onChange={(e) => setName(e.target.value)}
                           />
                         </div>
 
@@ -170,9 +199,11 @@ export default function Home() {
                             name="email"
                             id="email"
                             autoComplete="email"
+                            autoCapitalize="none"
                             placeholder="Email"
                             required
                             className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                            onChange={(e) => setEmail(e.target.value)}
                           />
                         </div>
 
@@ -188,6 +219,7 @@ export default function Home() {
                             autoComplete="current-password"
                             required
                             className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                            onChange={(e) => setPassword(e.target.value)}
                           />
                         </div>
 
@@ -195,8 +227,10 @@ export default function Home() {
                           <button
                             type="submit"
                             className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            disabled={processing}
                           >
                             Create your account
+                            {processing && <i className="fa fa-circle-o-notch fa-spin py-1 px-1"></i>}
                           </button>
                         </div>
                       </form>
