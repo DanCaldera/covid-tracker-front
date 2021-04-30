@@ -4,11 +4,15 @@ import { Fragment, useEffect, useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 import { Link } from 'react-router-dom'
 import { home, register } from '../axios/router'
+import useStore from '../store'
 
 export default function Home() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+
+  const user = useStore((state) => state.user)
+  const { logOutUser } = useStore()
 
   const [processing, setProcessing] = useState(false)
 
@@ -46,6 +50,11 @@ export default function Home() {
     }
 
     setProcessing(false)
+  }
+
+  const _onClickLogOut = () => {
+    localStorage.clear()
+    logOutUser()
   }
 
   return (
@@ -101,11 +110,28 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="hidden md:flex">
-                  <Link to="/login">
-                    <div className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700">
-                      Log in
-                    </div>
-                  </Link>
+                  {!user && (
+                    <Link to="/login">
+                      <div className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700">
+                        Log in
+                      </div>
+                    </Link>
+                  )}
+                  {user && (
+                    <>
+                      <Link to="/app">
+                        <div className="inline-flex items-center mx-2 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700">
+                          Go to App
+                        </div>
+                      </Link>
+                      <div
+                        onClick={_onClickLogOut}
+                        className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700"
+                      >
+                        Log out
+                      </div>
+                    </>
+                  )}
                 </div>
               </nav>
 
@@ -168,74 +194,76 @@ export default function Home() {
               </div>
               <div className="mt-16 sm:mt-24 lg:mt-0 lg:col-span-6">
                 <div className="bg-white sm:max-w-md sm:w-full sm:mx-auto sm:rounded-lg sm:overflow-hidden">
-                  <div className="px-4 py-8 sm:px-10">
-                    <div>
-                      <p className="text-sm font-medium text-gray-700">Sign up with Email</p>
+                  {!user && (
+                    <div className="px-4 py-8 sm:px-10">
+                      <div>
+                        <p className="text-sm font-medium text-gray-700">Sign up with Email</p>
+                      </div>
+
+                      <div className="mt-6">
+                        <form className="space-y-6" onSubmit={_handleSubmit}>
+                          <div>
+                            <label htmlFor="mobile-or-email" className="sr-only">
+                              Name
+                            </label>
+                            <input
+                              type="text"
+                              name="name"
+                              id="name"
+                              placeholder="Name"
+                              required
+                              className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                              onChange={(e) => setName(e.target.value)}
+                            />
+                          </div>
+
+                          <div>
+                            <label htmlFor="mobile-or-email" className="sr-only">
+                              Email
+                            </label>
+                            <input
+                              type="text"
+                              name="email"
+                              id="email"
+                              autoComplete="email"
+                              autoCapitalize="none"
+                              placeholder="Email"
+                              required
+                              className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                              onChange={(e) => setEmail(e.target.value)}
+                            />
+                          </div>
+
+                          <div>
+                            <label htmlFor="password" className="sr-only">
+                              Password
+                            </label>
+                            <input
+                              id="password"
+                              name="password"
+                              type="password"
+                              placeholder="Password"
+                              autoComplete="current-password"
+                              required
+                              className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                              onChange={(e) => setPassword(e.target.value)}
+                            />
+                          </div>
+
+                          <div>
+                            <button
+                              type="submit"
+                              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                              disabled={processing}
+                            >
+                              Create your account
+                              {processing && <i className="fa fa-circle-o-notch fa-spin py-1 px-1"></i>}
+                            </button>
+                          </div>
+                        </form>
+                      </div>
                     </div>
-
-                    <div className="mt-6">
-                      <form className="space-y-6" onSubmit={_handleSubmit}>
-                        <div>
-                          <label htmlFor="mobile-or-email" className="sr-only">
-                            Name
-                          </label>
-                          <input
-                            type="text"
-                            name="name"
-                            id="name"
-                            placeholder="Name"
-                            required
-                            className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
-                            onChange={(e) => setName(e.target.value)}
-                          />
-                        </div>
-
-                        <div>
-                          <label htmlFor="mobile-or-email" className="sr-only">
-                            Email
-                          </label>
-                          <input
-                            type="text"
-                            name="email"
-                            id="email"
-                            autoComplete="email"
-                            autoCapitalize="none"
-                            placeholder="Email"
-                            required
-                            className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
-                            onChange={(e) => setEmail(e.target.value)}
-                          />
-                        </div>
-
-                        <div>
-                          <label htmlFor="password" className="sr-only">
-                            Password
-                          </label>
-                          <input
-                            id="password"
-                            name="password"
-                            type="password"
-                            placeholder="Password"
-                            autoComplete="current-password"
-                            required
-                            className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
-                            onChange={(e) => setPassword(e.target.value)}
-                          />
-                        </div>
-
-                        <div>
-                          <button
-                            type="submit"
-                            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                            disabled={processing}
-                          >
-                            Create your account
-                            {processing && <i className="fa fa-circle-o-notch fa-spin py-1 px-1"></i>}
-                          </button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
+                  )}
                 </div>
               </div>
             </div>

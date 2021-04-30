@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-const api = 'http://localhost:5000'
-// const api = 'https://covid-tracker-back.vercel.app'
+// const api = 'http://localhost:5000'
+const api = 'https://covid-tracker-back.vercel.app'
 
 export const axiosInstance = axios.create({ baseURL: api })
 
