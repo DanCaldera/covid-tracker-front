@@ -3,6 +3,7 @@ import { Popover, Transition } from '@headlessui/react'
 import { MenuIcon, XIcon } from '@heroicons/react/outline'
 import { Link } from 'react-router-dom'
 import { home } from '../axios/router'
+import toast, { Toaster } from 'react-hot-toast'
 
 export default function Home() {
   //* to verify if backend is online
@@ -10,12 +11,18 @@ export default function Home() {
     const getHome = async () => {
       const response = await home()
       console.log(response)
+      if (response.data === 'pageok') {
+        toast.success('Welcome!')
+      } else {
+        toast.error('Oooops!')
+      }
     }
     getHome()
   }, [])
 
   return (
     <div className="relative bg-gray-800 overflow-hidden">
+      <Toaster />
       <div className="hidden sm:block sm:absolute sm:inset-0" aria-hidden="true">
         <svg
           className="absolute bottom-0 right-0 transform translate-x-1/2 mb-48 text-gray-700 lg:top-0 lg:mt-28 lg:mb-0 xl:transform-none xl:translate-x-0"
