@@ -1,9 +1,19 @@
-import { Fragment } from 'react'
+import { Fragment, useEffect } from 'react'
 import { Popover, Transition } from '@headlessui/react'
 import { MenuIcon, XIcon } from '@heroicons/react/outline'
 import { Link } from 'react-router-dom'
+import { home } from '../axios/router'
 
 export default function Home() {
+  //* to verify if backend is online
+  useEffect(() => {
+    const getHome = async () => {
+      const response = await home()
+      console.log(response)
+    }
+    getHome()
+  }, [])
+
   return (
     <div className="relative bg-gray-800 overflow-hidden">
       <div className="hidden sm:block sm:absolute sm:inset-0" aria-hidden="true">
@@ -130,6 +140,20 @@ export default function Home() {
 
                     <div className="mt-6">
                       <form action="/" method="POST" className="space-y-6">
+                        <div>
+                          <label htmlFor="mobile-or-email" className="sr-only">
+                            Name
+                          </label>
+                          <input
+                            type="text"
+                            name="name"
+                            id="name"
+                            placeholder="Name"
+                            required
+                            className="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
+                          />
+                        </div>
+
                         <div>
                           <label htmlFor="mobile-or-email" className="sr-only">
                             Email
